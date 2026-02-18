@@ -3,15 +3,7 @@ FROM n8nio/n8n:latest
 # Switch to root user to install global npm packages
 USER root
 
-# Install Python 3 + pip on Alpine base image
-RUN apk update && \
-    apk add --no-cache python3 py3-pip python3-dev && \
-    apk add --no-cache --virtual .build-deps build-base && \
-    ln -s /usr/bin/python3 /usr/bin/python && \
-    pip3 install --no-cache-dir --upgrade pip && \
-    apk del .build-deps
-
-# Optional: Pre-install common packages
+# Optional: Add more pip packages if needed
 RUN pip3 install --no-cache-dir requests numpy pandas
 
 # Install the desired npm packages globally
