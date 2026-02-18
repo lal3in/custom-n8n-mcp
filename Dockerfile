@@ -4,11 +4,12 @@ FROM naskio/n8n-python:latest
 # Switch to root user to install global npm packages
 USER root
 
-# Create Python virtual environment as node user (fix permissions)
-RUN python3 -m venv /tmp/python-venv --owner node --group node && \
+# Create venv normally, then fix ownership for node user
+RUN python3 -m venv /tmp/python-venv && \
     chown -R node:node /tmp/python-venv && \
-    /tmp/python-venv/bin/pip install --no-cache-dir --upgrade pip --user node && \
-    /tmp/python-venv/bin/pip install --no-cache-dir requests numpy pandas --user node
+    chmod -R 755 /tmp/python-venv && \
+    /tmp/python-venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /tmp/python-venv/bin/pip install --no-cache-dir requests numpy pandas
 
 # Install the desired npm packages globally
 RUN npm install -g firecrawl-mcp
